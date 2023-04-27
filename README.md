@@ -3,7 +3,7 @@
 
 # Use instruments
 ## asyncio
-*&emsp;* [ ] coroutines
+*&emsp;* [x] coroutines
 
 *&emsp;* [ ] future
 

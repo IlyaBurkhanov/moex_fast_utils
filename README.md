@@ -1,5 +1,5 @@
 # Fast utils for work with MOEX data
-### _Fast utils for work with financial data (MOEX). Pet project for update skill in python concurrency. _
+### Fast utils for work with financial data (MOEX). Pet project for update skill in python concurrency.
 
 # Description:
 REST API for work with information about stock exchange data:

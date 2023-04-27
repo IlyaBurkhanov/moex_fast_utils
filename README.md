@@ -3,9 +3,9 @@
 
 # Use instruments
 ## asyncio
-*&emsp;* - [x] coroutines
+- [x] coroutines
 
-*&emsp;* - [ ] future
+-[ ] future
 
 *&emsp;* - [ ] tasks
 

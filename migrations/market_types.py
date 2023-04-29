@@ -2,6 +2,19 @@
 GLOBAL DICTIONARIES ABOUT MARKET AND INSTRUMENTS TYPE
 """
 
+# Create table only by this ordering list
+create_table_order = [
+    "handbook",
+    "engines",
+    "markets",
+    "boardgroups",
+    "boards",
+    "durations",
+    "securitygroups",
+    "securitytypes",
+    "securitycollections",
+]
+
 engines = """
 CREATE TABLE IF NOT EXISTS engines (
     id integer NOT NULL,
@@ -21,16 +34,16 @@ CREATE TABLE IF NOT EXISTS markets (
     market_title varchar(765) NULL,
     market_id integer NULL,
     marketplace varchar(48) NULL,
-    is_otc integer NOT NULL,
-    has_history_files integer NOT NULL,
-    has_history_trades_files integer NOT NULL,
-    has_trades integer NOT NULL,
-    has_history integer NOT NULL,
-    has_candles integer NOT NULL,
-    has_orderbook integer NOT NULL,
-    has_tradingsession integer NOT NULL,
-    has_extra_yields integer NOT NULL,
-    has_delay integer NOT NULL,
+    is_otc integer NULL,
+    has_history_files integer NULL,
+    has_history_trades_files integer NULL,
+    has_trades integer NULL,
+    has_history integer NULL,
+    has_candles integer NULL,
+    has_orderbook integer NULL,
+    has_tradingsession integer NULL,
+    has_extra_yields integer NULL,
+    has_delay integer NULL,
     PRIMARY KEY (id)
 )
 """
@@ -69,10 +82,11 @@ CREATE TABLE IF NOT EXISTS boardgroups (
     board_group_id integer NULL,
     is_traded integer NULL,
     is_order_driven integer NULL,
-    category varchar(55) NOT NULL,
+    category varchar(189) NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT fk_engine FOREIGN KEY (trade_engine_id) references engines(id) ON DELETE CASCADE,
-    CONSTRAINT fk_market FOREIGN KEY (market_id) references markets(id) ON DELETE SET NULL
+    CONSTRAINT fk_market FOREIGN KEY (market_id) references markets(id) ON DELETE CASCADE,
+    CONSTRAINT fk_category FOREIGN KEY (category) references handbook(slug) ON DELETE NO ACTION
 )
 """
 
@@ -82,7 +96,8 @@ CREATE TABLE IF NOT EXISTS durations (
     duration integer NOT NULL,
     days integer NULL,
     title varchar(765) NULL,
-    hint  varchar(765) NULL
+    hint  varchar(765) NULL,
+    PRIMARY KEY (interval)
 )
 """
 
@@ -97,7 +112,9 @@ CREATE TABLE IF NOT EXISTS securitytypes (
     security_group_name varchar(93) NULL,
     stock_type varchar(10) NULL,
     PRIMARY KEY (id),
-    CONSTRAINT fk_engine FOREIGN KEY (trade_engine_id) references engines(id) ON DELETE CASCADE
+    CONSTRAINT fk_engine FOREIGN KEY (trade_engine_id) references engines(id) ON DELETE CASCADE,
+    CONSTRAINT fk_security_group FOREIGN KEY (security_group_name) references securitygroups(name) ON DELETE NO ACTION
+    
 )
 """
 
@@ -107,7 +124,8 @@ CREATE TABLE IF NOT EXISTS securitygroups (
     name varchar(93) NOT NULL,
     title varchar(765) NULL,
     is_hidden integer NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    UNIQUE(name)
 )
 """
 
@@ -118,6 +136,14 @@ CREATE TABLE IF NOT EXISTS securitycollections (
     title varchar(765) NULL,
     security_group_id integer NOT NULL,
     PRIMARY KEY (id),
-    CONSTRAINT fk_security_group FOREIGN KEY (security_group_id) references securitygroups(id) ON DELETE CASCADE
+    CONSTRAINT fk_security_group FOREIGN KEY (security_group_id) references securitygroups(id) ON DELETE NO ACTION
+)
+"""
+
+handbook = """
+CREATE TABLE IF NOT EXISTS handbook (
+    slug varchar(189) NOT NULL,
+    title varchar(765) NOT NULL,
+    PRIMARY KEY (slug)
 )
 """

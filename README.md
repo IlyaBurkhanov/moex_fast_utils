@@ -30,13 +30,13 @@ This service can use as part of product for trading, analyses or deals control.
 
 # Use instruments:
 ## asyncio
-- [ ] coroutines
+- [x] coroutines
 - [ ] future
 - [ ] tasks
 - [ ] loop
 - [ ] events
-- [ ] gather
-- [ ] create_task
+- [x] gather
+- [x] create_task
 - [ ] get_event_loop
 - [ ] run_until_complete
 - [ ] task done/cancel
@@ -74,11 +74,11 @@ This service can use as part of product for trading, analyses or deals control.
 - [ ] Semaphore
 
 ## Frameworks and other libs
-- [ ] aiohttp (sessions, timeouts)
-- [ ] fastapi
-- [ ] logging
+- [x] aiohttp (sessions, timeouts)
+- [x] fastapi
+- [x] logging
 - [ ] uvloop (linux container)
-- [ ] asyncpg (pools, execute/many, fetch, transactions, cursor)
+- [x] asyncpg (pools, execute/many, fetch, transactions, cursor)
 - [ ] contextlib.suppress
 - [ ] dataclass, enums
 - [ ] pydantic

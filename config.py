@@ -10,7 +10,7 @@ class Settings(BaseSettings):
 
     POINT_MARKET_DICTIONARY: str
     POINT_HANDBOOK: str
-
+    POINT_SECURITY_INFO: str
 
     class Config:
         env_file = ".env"

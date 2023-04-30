@@ -5,6 +5,7 @@ from loguru import logger
 
 from config import settings
 from db import moex_db
+from api.securities_info.security_dict import router_security_dict
 from utils.database.prepare import prepare_database, get_dictionaries_from_moex
 
 logger.remove()
@@ -19,6 +20,7 @@ logger.add(
 logger.add(sys.stderr, level="INFO")
 
 app = FastAPI()
+app.include_router(router_security_dict, prefix="/security")
 
 
 @app.on_event("startup")

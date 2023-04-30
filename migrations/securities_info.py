@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS security_boards (
     market_id integer NULL,
     market varchar(45) NULL,
     engine_id integer NULL,
-    engine integer NULL,
+    engine varchar(45) NOT NULL,
     is_traded smallint NULL,
     decimals integer NULL,
     history_from date NULL,

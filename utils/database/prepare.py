@@ -3,7 +3,7 @@ import asyncio
 import sys
 from loguru import logger
 
-from db import moex_db
+from db import MOEX_DB
 from migrations import market_types, securities_info
 from config import settings
 from utils.database.instruments import async_executor
@@ -19,7 +19,7 @@ async def prepare_database():
         SELECT table_name FROM information_schema.tables
         WHERE table_schema = 'public'
     """
-    async with moex_db.pool.acquire() as connection:
+    async with MOEX_DB.pool.acquire() as connection:
         tables = set(dict(table)["table_name"] for table in await connection.fetch(sql_all_tables))
         for table in market_types.create_table_order:
             if table not in tables:
@@ -39,7 +39,7 @@ async def save_dictionaries_in_db(table_name: str, data: dict) -> None:
         VALUES({', '.join(['$' + str(number) for number in range(1, len(data['columns']) + 1)])}) 
         ON CONFLICT DO NOTHING;
     """
-    async with moex_db.pool.acquire() as connection:
+    async with MOEX_DB.pool.acquire() as connection:
         await connection.executemany(sql_template, data["data"])
 
 

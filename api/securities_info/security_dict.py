@@ -10,7 +10,7 @@ from starlette import status
 from starlette.responses import JSONResponse
 
 from config import settings
-from db import moex_db
+from db import MOEX_DB
 from sql_requests.security_info import (
     GET_SECID_INFO,
     INSERT_INTO_SECURITY,
@@ -55,7 +55,7 @@ class SecurityInfo(BaseModel):
 
 @logger.catch
 async def security_from_db(attribute, value):
-    async with moex_db.pool.acquire() as connection:
+    async with MOEX_DB.pool.acquire() as connection:
         result = await connection.fetchrow(GET_SECID_INFO % attribute, value)
         if result:
             return {key.upper(): value for key, value in dict(result).items()}
@@ -77,7 +77,7 @@ def get_security_model(data: dict):
 async def save_security(model: SecurityInfo):
     result = model.dict()
     values = [result[column] for column in SECURITY_COLUMNS]
-    async with moex_db.pool.acquire() as connect:
+    async with MOEX_DB.pool.acquire() as connect:
         await connect.execute(INSERT_INTO_SECURITY, *values)
 
 
@@ -95,7 +95,7 @@ async def save_security_boards(data: dict):
             if values[num]:
                 values[num] = datetime.strptime(values[num], "%Y-%m-%d").date()
 
-    async with moex_db.pool.acquire() as connect:
+    async with MOEX_DB.pool.acquire() as connect:
         await connect.executemany(raw_sql, data["data"])
 
 
@@ -133,7 +133,7 @@ async def get_secid(
 async def get_boards_by_secid(
         security_id: str,
 ):
-    async with moex_db.pool.acquire() as connect:
+    async with MOEX_DB.pool.acquire() as connect:
         if boards_db := await connect.fetch(SQL_SECURITY_BOARDS, security_id):
             values = []
             for board in boards_db:
@@ -167,4 +167,3 @@ async def get_boards_by_secid(
             "columns": [column for _, column in column_position],
             "values": values
         }
-

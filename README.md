@@ -32,17 +32,16 @@ This service can use as part of product for trading, analyses or deals control.
 ## asyncio
 - [x] coroutines
 - [ ] future
-- [ ] tasks
-- [ ] loop
+- [x] tasks
+- [x] loop
 - [ ] events
 - [x] gather
 - [x] create_task
-- [ ] get_event_loop
-- [ ] run_until_complete
+- [x] run_until_complete
 - [ ] task done/cancel
 - [ ] wait_for
 - [ ] task shield
-- [ ] get_event_loop / get_running_loop
+- [x] get_event_loop / get_running_loop
 - [ ] call_soon
 - [ ] call_later
 - [ ] loop debug
@@ -50,7 +49,7 @@ This service can use as part of product for trading, analyses or deals control.
 - [ ] as_completed (+ timeout)
 - [ ] wait (return_when options)
 - [ ] async generator
-- [ ] run_in_executor
+- [x] run_in_executor
 - [ ] ContextVar
 - [ ] run_coroutine_threadsafe
 - [ ] call_soon_threadsafe
@@ -59,12 +58,10 @@ This service can use as part of product for trading, analyses or deals control.
 - [ ] Semaphore
 - [ ] Event
 - [ ] Condition (+ wait_for)
-- [ ] Queue, PriorityQueue, LifoQueue
+- [x] Queue, PriorityQueue, LifoQueue
 
 ## Threads, process and concurrent
-- [ ] threading
-- [ ] multiprocessing (apply_async)
-- [ ] ProcessPoolExecutor (map)
+- [x] ProcessPoolExecutor (map)
 - [ ] ThreadPoolExecutor
 - [ ] MapReduce on multiprocessor (pattern)
 - [ ] Shared multiprocess values, serializers
@@ -79,7 +76,6 @@ This service can use as part of product for trading, analyses or deals control.
 - [x] logging
 - [ ] uvloop (linux container)
 - [x] asyncpg (pools, execute/many, fetch, transactions, cursor)
-- [ ] contextlib.suppress
-- [ ] dataclass, enums
-- [ ] pydantic
-- [ ] other standard libs and instruments (functools, itertools etc)
+- [x] dataclass, enums
+- [x] pydantic
+- [x] other standard libs and instruments (functools, itertools etc)

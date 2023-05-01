@@ -1,5 +1,6 @@
 import asyncpg
 from asyncpg.pool import Pool
+from contextlib import asynccontextmanager
 from config import settings
 from utils import singleton
 
@@ -21,4 +22,17 @@ class DataBase:
         return self._pool
 
 
-moex_db = DataBase()
+@asynccontextmanager
+async def pool_for_process():
+    pool = await asyncpg.create_pool(
+        dsn=settings.DB_DSN,
+        min_size=settings.MIN_POOL_SIZE_PROCESS,
+        max_size=settings.MAX_POOL_SIZE_PROCESS
+    )
+    try:
+        yield pool
+    finally:
+        await pool.close()
+
+
+MOEX_DB = DataBase()

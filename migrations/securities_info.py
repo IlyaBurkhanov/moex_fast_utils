@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS security_boards (
     currencyid varchar(10) NULL,
     UNIQUE (secid, boardid)
 );
-CREATE INDEX security_boards_idx ON security_boards (
+CREATE INDEX IF NOT EXISTS security_boards_idx ON security_boards (
     secid, boardid, market, engine, is_traded, is_primary
 );
 """

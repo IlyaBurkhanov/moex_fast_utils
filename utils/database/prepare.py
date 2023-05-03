@@ -4,7 +4,7 @@ import sys
 from loguru import logger
 
 from db import MOEX_DB
-from migrations import market_types, securities_info
+from migrations import market_types, securities_info, security_history, logs
 from config import settings
 from utils.database.instruments import async_executor
 
@@ -26,9 +26,14 @@ async def prepare_database():
                 await connection.execute(getattr(market_types, table))
 
     other_task = []
-    for table in ["security_description", "security_boards"]:
-        if table not in tables:
-            other_task.append(async_executor(getattr(securities_info, table)))
+    for modul, model_tables in [
+        [securities_info, ("security_description", "security_boards")],
+        [security_history, ("session_security_history",)],
+        [logs, ("logs_session_security_history",)],
+    ]:
+        for model_table in model_tables:
+            if model_table not in tables:
+                other_task.append(async_executor(getattr(modul, model_table)))
 
     await asyncio.gather(*other_task)
 
@@ -49,7 +54,7 @@ async def get_dictionaries_from_moex():
     async with aiohttp.ClientSession() as client:
         handbook_dict, index_dict = await asyncio.gather(
             client.get(settings.POINT_HANDBOOK),
-            client.get(settings.POINT_MARKET_DICTIONARY)
+            client.get(settings.POINT_MARKET_DICTIONARY),
         )
         handbook, index_data = await asyncio.gather(handbook_dict.json(), index_dict.json())
         handbook_data = handbook["handbooks_handbook"]

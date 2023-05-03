@@ -4,10 +4,9 @@ from typing import Literal
 import aiohttp
 from loguru import logger
 from datetime import date, datetime
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, HTTPException
 from pydantic import BaseModel, validator
 from starlette import status
-from starlette.responses import JSONResponse
 
 from config import settings
 from db import MOEX_DB
@@ -109,6 +108,15 @@ async def save_all_result(data: dict, model: SecurityInfo | None = None):
     await asyncio.gather(*tasks)
 
 
+async def api_get_and_save_security(secid: str):
+    result_api = await get_security_by_api(secid)
+    if result_api["description"].get("data"):
+        model = get_security_model(result_api["description"])
+        asyncio.create_task(save_all_result(result_api, model))
+        return model
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail={"details": f"Security {secid} is not found!"})
+
+
 @router_security_dict.get("/{security_id}", description="Get info about security", tags=["security"])
 async def get_secid(
         security_id: str,
@@ -121,12 +129,8 @@ async def get_secid(
         return result
 
     if attribute != "isin":
-        result_api = await get_security_by_api(security_id)
-        if result_api["description"].get("data"):
-            model = get_security_model(result_api["description"])
-            asyncio.create_task(save_all_result(result_api, model))
-            return model
-    return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"details": "Security is not found!"})
+        model = await api_get_and_save_security(security_id)
+        return model
 
 
 @router_security_dict.get("/boards/{security_id}", description="Get boards by security", tags=["security"])
@@ -148,16 +152,19 @@ async def get_boards_by_secid(
             connect.fetchrow("SELECT secid FROM security_description WHERE secid=$1", security_id),
         )
         if not data_api.get("description", {}).get("data"):
-            return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"details": "Security is not found!"})
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail={"details": f"Security '{security_id}' is not found!"}
+            )
 
         if not data_db:
             asyncio.create_task(save_all_result(data_api))
         elif data_api.get("boards", {}).get("data"):
             asyncio.create_task(save_security_boards(data_api["boards"]))
         else:
-            return JSONResponse(
+            raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                content={"details": f"Boards for {security_id} is not found!"}
+                detail={"details": f"Boards for {security_id} is not found!"}
             )
         column_position = [
             (num, column) for num, column in enumerate(data_api["boards"]["columns"]) if column in BOARDS_COLUMNS_SET

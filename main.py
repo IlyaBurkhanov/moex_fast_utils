@@ -8,6 +8,7 @@ from loguru import logger
 from config import settings
 from db import MOEX_DB
 from api.securities_info.security_dict import router_security_dict
+from api.history.day_aggregation import router_security_history
 from utils.database.prepare import prepare_database, get_dictionaries_from_moex
 from workers import process_workers
 
@@ -26,6 +27,7 @@ logger.add(sys.stderr, level="INFO")
 
 app = FastAPI()
 app.include_router(router_security_dict, prefix="/security")
+app.include_router(router_security_history, prefix="/history")
 
 
 @app.on_event("startup")

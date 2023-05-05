@@ -93,13 +93,12 @@ async def _check_and_get_secid(security_id: str | None, security_attr: str | Non
 
 async def check_default_values(data: BaseModel):
     check_data = data.dict(exclude_none=True)
-    print(check_data, data)
     secid = check_data.pop("secid", None)
     isin = check_data.pop("isin", None)
     security_id, security_attr = (secid, "secid") if secid else (isin, "isin") if isin else (None, None)
     get_secid_task = create_task(_check_and_get_secid(security_id, security_attr))
+    tasks = []
     try:
-        tasks = []
         if check_data:
             for attr, value in check_data.items():
                 if table_args := _SQL_TABLES.get(attr):

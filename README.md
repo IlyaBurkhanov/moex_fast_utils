@@ -1,5 +1,8 @@
 # Fast utils for work with MOEX data
-### Fast utils for work with financial data (MOEX). Pet project for update skill in python concurrency.
+### Fast utils for work with financial data (MOEX). Pet project to improve skill in python and develop useful instruments.
+
+### IT'S MVP
+
 
 # Description:
 REST API for work with information about stock exchange data:
@@ -38,15 +41,15 @@ This service can use as part of product for trading, analyses or deals control.
 - [x] gather
 - [x] create_task
 - [x] run_until_complete
-- [ ] task done/cancel
+- [x] task done/cancel
 - [ ] wait_for
 - [ ] task shield
 - [x] get_event_loop / get_running_loop
 - [ ] call_soon
 - [ ] call_later
 - [ ] loop debug
-- [ ] all_tasks
-- [ ] as_completed (+ timeout)
+- [x] all_tasks
+- [x] as_completed (+ timeout)
 - [ ] wait (return_when options)
 - [ ] async generator
 - [x] run_in_executor

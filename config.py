@@ -5,6 +5,7 @@ from pydantic import BaseSettings
 class Settings(BaseSettings):
     DEBUG_LEVEL: str = "DEBUG"
     MAX_PROCESS: int = 4
+    MAX_ASYNC_REQUEST_WORKER: int = 5
 
     # DB
     DB_DSN: str
@@ -17,6 +18,7 @@ class Settings(BaseSettings):
     POINT_MARKET_DICTIONARY: str
     POINT_HANDBOOK: str
     POINT_SECURITY_INFO: str
+    POINT_SECURITY_DAY_HISTORY: str
 
     # QUERY
     QUEUE_THREAD_MAX_SIZE: int = 10_000
@@ -30,3 +32,4 @@ settings = Settings(_env_file=r'C:\projects\moex_fast_utils\.env')
 
 QUEUE_THREAD = asyncio.Queue(maxsize=settings.QUEUE_THREAD_MAX_SIZE)
 QUEUE_PROCESS = asyncio.Queue(maxsize=settings.QUEUE_PROCESS_MAX_SIZE)
+REQUEST_SEMAPHORE = asyncio.Semaphore(settings.MAX_ASYNC_REQUEST_WORKER)  # USE FOR HISTORY DATA

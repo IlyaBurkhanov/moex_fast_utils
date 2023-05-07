@@ -63,3 +63,8 @@ async def get_dictionaries_from_moex():
         for table_ord_inx in range(1, len(market_types.create_table_order)):
             table = market_types.create_table_order[table_ord_inx]
             await save_dictionaries_in_db(table, index_data[table])
+
+
+async def del_await_history_from_api():
+    async with MOEX_DB.pool.acquire() as connection:
+        await connection.execute("""DELETE FROM logs_session_security_history WHERE status != 'success'""")

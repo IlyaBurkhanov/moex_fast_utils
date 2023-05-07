@@ -9,7 +9,7 @@ from config import settings
 from db import MOEX_DB
 from api.securities_info.security_dict import router_security_dict
 from api.history.day_aggregation import router_security_history
-from utils.database.prepare import prepare_database, get_dictionaries_from_moex
+from utils.database.prepare import prepare_database, get_dictionaries_from_moex, del_await_history_from_api
 from workers import process_workers
 
 
@@ -36,6 +36,12 @@ async def startup_settings():
     await prepare_database()  # CREATE DB IF NOT EXISTS
     await get_dictionaries_from_moex()  # UPDATE DICTIONARIES
     asyncio.create_task(process_workers())
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    await asyncio.sleep(10)
+    await del_await_history_from_api()
 
 
 if __name__ == "__main__":

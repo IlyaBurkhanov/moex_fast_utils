@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS logs_session_security_history(
     status log_status NOT NULL,
     PRIMARY KEY (id),
     CHECK (start_date <= end_date),
-    CHECK (end_date - start_date < 367),
+    CHECK (end_date - start_date <= 3000),
     UNIQUE (engine, market, session, secid, start_date, end_date)
 );
 """

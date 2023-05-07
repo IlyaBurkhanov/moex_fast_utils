@@ -1,3 +1,5 @@
+import asyncio
+
 import asyncpg
 from asyncpg.pool import Pool
 from contextlib import asynccontextmanager
@@ -21,6 +23,12 @@ class DataBase:
     def pool(self):
         return self._pool
 
+    def __del__(self):
+        try:
+            if self.pool:
+                asyncio.get_running_loop().run_until_complete(self._pool.close())
+        except Exception:
+            pass
 
 @asynccontextmanager
 async def pool_for_process():

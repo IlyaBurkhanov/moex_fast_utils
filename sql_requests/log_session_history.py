@@ -23,7 +23,7 @@ raw_sql_get_requests_to_api_history = """
            request_date
     FROM (SELECT null                                           id,
                  0                                              wait_status,
-                 ARRAY [$5, start_date - 1] request_date
+                 ARRAY [$5, start_date - 1]                     request_date
           FROM TMP
           WHERE position = 1
             and start_date > $5
@@ -41,10 +41,11 @@ raw_sql_get_requests_to_api_history = """
                      END as request_date
           FROM TMP
           UNION ALL
-          SELECT null as id,
-                 0    as wait_status,
-                 ARRAY[$5, $6]
-          WHERE NOT exists(SELECT * FROM TMP)) as t1
+          SELECT null          as id,
+                 0             as wait_status,
+                 ARRAY[$5, $6] as request_date
+          WHERE NOT exists(SELECT * FROM TMP)
+    ) as t1
     WHERE request_date is not null
        or wait_status = 1
 """
